@@ -32,13 +32,44 @@ const users = db.define('Users',{
     img: {
         type: sequelize.BLOB('long'),
         allowNull: false
+    },
+    balance: {
+        type: datatypes.INTEGER,
+        allowNull:false
     }
 });
+
+const Transactions = db.define('History',{
+    amount: {
+        type: datatypes.INTEGER,
+        allowNull:false
+    },
+    time: {
+        type: datatypes.DATE,
+        // allowNull:false
+    },
+    from: {
+        type: datatypes.STRING,
+        allowNull: false
+    },
+    to: {
+        type: datatypes.STRING,
+        allowNull: false
+    },
+    senderbalance: {
+        type: datatypes.INTEGER,
+        allowNull:false
+    },
+    recieverbalance: {
+        type: datatypes.INTEGER,
+        allowNull:false
+    }
+})
 
 db.sync({ alter: true })
     .then (() => console.log("database synchronized"))
     .catch( (err) => console.log(err))
 
 module.exports = {
-    users,db
+    users,db,Transactions
 }
