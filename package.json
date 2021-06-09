@@ -12,6 +12,7 @@
     "child_process": "^1.0.2",
     "express": "^4.17.1",
     "hbs": "^4.1.2",
+    "multer": "^1.4.2",
     "mysql2": "^2.2.5",
     "sequelize": "^6.6.2"
   }

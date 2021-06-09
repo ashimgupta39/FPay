@@ -27,7 +27,41 @@ app.get('/signup', (req,res)=>{
     res.sendFile(__dirname+'/views/signup.html')
 })
 
+//Image upload
+const multer = require('multer')
+//set the storage engine
+const storage = multer.diskStorage({
+    destination: './src/views',
+    filename: function(req,file,cb){
+        // console.log(req)
+        console.log(req.body)
+        console.log('----------------------------------------------')
+        console.log(file)
+        cb(null,file.originalname);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits:{fileSize: 1000000},
+}).single('img');
+app.post('/upload',(req, res) => {
+    upload(req, res, (err) => {
+      if(err){
+        console.log(err)
+      } else {
+        if(req.file == undefined){
+            console.log('Error: No File Selected!')
+        } else {
+            console.log('File Uploaded!')
+        }
+      }
+    });
+    res.sendFile(__dirname + '/views/login.html')
+  });
+
 app.post('/signupusers', async(req,res)=>{
+
     await users.create({
         name: req.body.name,
         username: req.body.username,
@@ -37,7 +71,11 @@ app.post('/signupusers', async(req,res)=>{
         DOB: req.body.dob,
         img: req.body.img,
         balance: req.body.balance
-    }).then(()=>{res.sendFile(__dirname + '/views/login.html')})
+    }).then(()=>{
+        res.render('upload',{
+            uname: req.body.username
+        })
+    })
       .catch((e)=>{console.log(e)})
 })
 
@@ -57,22 +95,12 @@ app.post('/loginusers', async(req,res)=>{
                 ]
             }
         })
-        // let transfrom = await histories.findAll({
-        //     where: {
-        //         from: req.body.uid
-        //     }
-        // })
-        // let transto = await histories.findAll({
-        //     where: {
-        //         to: req.body.uid
-        //     }
-        // })
         res.render('accountspg',{
             details,transhistory
         })
     }
     else{
-        res.send(`<h1>Login unsuccessfull</h1>`)
+        res.send(`<h1>Login unsuccessful</h1>`)
     }
 })
 

@@ -25,13 +25,9 @@ async function recognizeFaces() {
  video.addEventListener('play',async () => {
   const canvas = faceapi.createCanvasFromMedia(video)
   document.body.append(canvas)
-  // const label = document.getElementsByTagName("title");
-  // labe = label[0].innerHTML
-  //   console.log(labe)
-  // console.log('loadedd')
   const displaySize = { width: video.width, height: video.height }
   faceapi.matchDimensions(canvas, displaySize)
-  console.log('aa')
+  // console.log('aa')
 
   setInterval(async () => {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions().withFaceDescriptors()
@@ -41,13 +37,9 @@ async function recognizeFaces() {
     const results = await resizedDetections.map((d) => {
       return faceMatcher.findBestMatch(d.descriptor)
   })
-    // const results = resizedDetections.map(fd => return faceMatcher.findBestMatch(fd.descriptor))
     console.log(results)
     console.log('hello')
     results.forEach((result, i) => {
-    // faceapi.draw.drawDetections(canvas, resizedDetections)
-    // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-    // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
     const box = resizedDetections[i].detection.box
     const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
     drawBox.draw(canvas)
@@ -66,14 +58,12 @@ function loadLabeledImage() {
   return Promise.all(
     labels.map(async (lab) => {
       console.log(lab)
-      const img= await faceapi.fetchImage ('guptaashim.jpeg')
+      const img= await faceapi.fetchImage (`${lab}.jpeg`)
       document.body.append(img)
-      console.log('a')
-      // get img from http url
-      // const detections = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor()
+      // console.log('a')
       const detections = await faceapi.detectSingleFace(img, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor()
       console.log(detections)
-      console.log('b')
+      // console.log('b')
       if (!detections) {
         throw new Error(`no faces detected for ${lab}`)
       }
